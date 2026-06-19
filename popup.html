@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=360">
+  <title>DeepSeek Monitor</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="app" class="app">
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">✨</span>
+        <span id="brand-text" class="brand-text">MyApiMonitor</span>
+      </div>
+      <button id="btn-refresh" class="ghost-btn" title="刷新">
+        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+      </button>
+      <button id="btn-theme" class="ghost-btn" title="主题">👤</button>
+      <button id="btn-settings" class="ghost-btn" title="设置">
+        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </header>
+
+    <nav id="provider-tabs" class="provider-tabs" aria-label="API 供应商切换"></nav>
+
+    <main class="dashboard">
+      <section class="panel balance-panel">
+        <div class="card balance-card">
+          <div class="balance-meta">
+            <span class="balance-label">账户余额</span>
+            <span class="balance-hint">可用</span>
+          </div>
+          <div id="balance-amount" class="balance-amount">¥0.00</div>
+          <div class="mini-grid">
+            <div class="mini-card">
+              <span class="mini-label">当日消耗</span>
+              <span id="daily-amount" class="mini-value">¥0.00</span>
+            </div>
+            <div class="mini-card">
+              <span class="mini-label">本月消耗</span>
+              <span id="month-amount" class="mini-value">¥0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card info-card">
+          <div class="chart-header">
+            <span id="provider-detail-title" class="chart-title">账户信息</span>
+            <span id="provider-updated" class="chart-meta">未查询</span>
+          </div>
+          <div id="provider-details" class="detail-list"></div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-header">
+            <span class="model-icon" aria-hidden="true">⚡</span>
+            <div class="model-title">
+              <div id="flash-model-name" class="model-name">V4 Flash</div>
+              <div id="flash-tokens" class="model-sub">0 Tok...</div>
+            </div>
+            <div class="model-meta">
+              <div id="flash-price" class="model-price">¥0.00</div>
+              <div id="flash-speed" class="model-speed">0 M T/s</div>
+            </div>
+          </div>
+          <div class="model-progress">
+            <div id="flash-bar" class="model-bar" style="width:0%"></div>
+          </div>
+          <div class="model-footer">
+            <span class="footer-chip">缓存命中 <span id="flash-cache">0%</span></span>
+            <span class="footer-chip">缓存命中 96%</span>
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-header">
+            <span class="model-icon" aria-hidden="true">🧠</span>
+            <div class="model-title">
+              <div id="pro-model-name" class="model-name">V4 Pro</div>
+              <div id="pro-tokens" class="model-sub">0 Tok...</div>
+            </div>
+            <div class="model-meta">
+              <div id="pro-price" class="model-price">¥0.00</div>
+              <div id="pro-speed" class="model-speed">0 M T/s</div>
+            </div>
+          </div>
+          <div class="model-progress">
+            <div id="pro-bar" class="model-bar" style="width:0%"></div>
+          </div>
+          <div class="model-footer">
+            <span class="footer-chip">缓存命中 <span id="pro-cache">0%</span></span>
+            <span class="footer-chip">缓存命中 84%</span>
+          </div>
+        </div>
+
+        <div class="card chart-card">
+          <div class="chart-header">
+            <span class="chart-title">缓存命中明细</span>
+            <span id="cache-summary" class="chart-meta">命中率 94%</span>
+          </div>
+          <div class="mini-chart" id="cache-chart" aria-label="cache hit bar chart"></div>
+        </div>
+      </section>
+
+      <section class="panel model-panel">
+        <div class="card metric-card">
+          <div class="metric-header">
+            <span class="metric-icon" aria-hidden="true">⚡</span>
+            <span id="flash-metric-title" class="metric-title">V4 Flash</span>
+            <span id="flash-card-price" class="metric-price">¥0.00</span>
+          </div>
+          <div class="metric-grid">
+            <div class="metric-box">
+              <div class="metric-label">API 请求次数</div>
+              <div id="flash-requests" class="metric-value">0</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">Tokens</div>
+              <div id="flash-token-total" class="metric-value">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card metric-card">
+          <div class="metric-header">
+            <span class="metric-icon" aria-hidden="true">🧠</span>
+            <span id="pro-metric-title" class="metric-title">V4 Pro</span>
+            <span id="pro-card-price" class="metric-price">¥0.00</span>
+          </div>
+          <div class="metric-grid">
+            <div class="metric-box">
+              <div class="metric-label">API 请求次数</div>
+              <div id="pro-requests" class="metric-value">0</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">Tokens</div>
+              <div id="pro-token-total" class="metric-value">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card chart-card">
+          <div class="chart-header">
+            <div class="chart-title">按日 Token 消耗</div>
+            <div id="token-range" class="chart-range">6/9 - 6/15</div>
+          </div>
+          <div class="mini-chart" id="token-chart" aria-label="daily token chart"></div>
+          <div class="chart-legend">
+            <span class="legend-dot hit"></span><span class="legend-text">输入（命中缓存）</span>
+            <span class="legend-dot miss"></span><span class="legend-text">输入（未命中缓存）</span>
+            <span class="legend-dot output"></span><span class="legend-text">输出</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside id="settings-panel" class="settings-panel hidden">
+      <div class="settings-header">
+        <div class="settings-brand">
+          <span class="brand-icon" aria-hidden="true">✨</span>
+          <span id="settings-brand-text">MyApiMonitor</span>
+        </div>
+        <div class="settings-actions">
+          <span class="settings-label">设置</span>
+          <button id="btn-close-settings" class="ghost-btn" title="关闭">✕</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="section-title">API Key</div>
+        <p id="api-key-desc" class="section-desc">用于调用当前供应商 API 获取账户信息。</p>
+        <p class="section-caption">API Key 仅在当前设备 Windows 缓冲区本地保存。</p>
+        <p class="section-caption">本地路径：<code id="key-path">AppData/Roaming/DeepSeekMonitor</code></p>
+        <div class="input-row">
+          <input id="api-key" type="password" class="settings-input" placeholder="sk-..."/>
+          <button id="btn-toggle-key" class="ghost-btn" title="显示">👁</button>
+        </div>
+        <div class="status-row">
+          <button id="btn-verify" class="primary-btn">验证并保存</button>
+          <span id="verify-status" class="status-badge success">已配置</span>
+          <button id="btn-clear-key" class="ghost-btn ghost-danger">清除 Key</button>
+        </div>
+      </div>
+
+      <div id="usage-token-section" class="settings-section">
+        <div class="section-title">调用同步 Token</div>
+        <p class="section-desc">用于同步 Token 用量，消耗明细数据。DeepSeek 无官方用量<br/>API，需要您登录 token（与上面 API Key 不同）。</p>
+        <div class="section-methods">
+          <div class="method">
+            <div class="method-title">方式一：同页登录自动同步</div>
+            <div class="status-row">
+              <button id="btn-browser-sync" class="primary-btn">网页登录自动同步</button>
+              <span class="status-badge success">已配置</span>
+              <button id="btn-clear-sync" class="ghost-btn ghost-danger">清除 Token</button>
+            </div>
+            <div class="method-caption">Token 已配置</div>
+          </div>
+          <div class="method">
+            <div class="method-title">方式二：手动粘贴 token</div>
+            <div class="input-row">
+              <input id="sync-token" type="password" class="settings-input" placeholder="token..."/>
+              <button id="btn-toggle-token" class="ghost-btn" title="显示">👁</button>
+            </div>
+            <button id="btn-save-token" class="primary-btn">保存 Token</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="section-title">开机自启</div>
+        <p class="section-desc">开启后，每次重启 Windows 时自动启动 DeepSeek Monitor。</p>
+        <div class="toggle-row">
+          <span>启动和启动冲突</span>
+          <label class="switch">
+            <input id="autostart-toggle" type="checkbox" checked/>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="section-title">自动更新</div>
+        <p class="section-desc">开启后，检测到新版本时自动：DeepSeek API 获取最新数据。</p>
+        <div class="toggle-row">
+          <span>启用启动时自动检查</span>
+          <label class="switch">
+            <input id="autoupdate-toggle" type="checkbox"/>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="section-title">关于</div>
+        <div class="about-row">
+          <span>当前版本</span>
+          <span id="app-version">v1.1.0</span>
+        </div>
+      </div>
+    </aside>
+
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <span>查询中...</span>
+    </div>
+  </div>
+
+  <script src="providers/index.js"></script>
+  <script src="providers/deepseek.js"></script>
+  <script src="providers/stepfun.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
